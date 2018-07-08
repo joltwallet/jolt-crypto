@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := jolt_crypto
+PROJECT_NAME := joltcrypto
 
 EXTRA_COMPONENT_DIRS := $(IDF_PATH)/../third-party-components
 
