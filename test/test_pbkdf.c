@@ -76,5 +76,4 @@ TEST_CASE("pbkdf2", "[jolt-crypto]") {
             "115b59f9e60cd9532fa33e0f75aefe30"
             "225c583a186cd82bd4daea9724a3d3b8",
             guess_hash_hex);
-
 }

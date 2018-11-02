@@ -5,16 +5,23 @@
 #include "jolttypes.h"
 #include "joltcrypto.h"
 
+/*
+ * c - number of iterations
+ * buf - stores the derived key 
+ * dkLen - derived key length in bits
+ *
+ * Based on the pbkdf2 sha256 code in libsodium
+ */
 void pbkdf2_hmac_sha512(const uint8_t *passwd, size_t passwdlen, 
         const uint8_t *salt, size_t saltlen,
         uint8_t *buf, size_t dkLen, uint64_t c){
-    /*
-     * c - number of iterations
-     * buf - stores the derived key 
-     * dkLen - derived key length in bits
-     *
-     * Based on the pbkdf2 sha256 code in libsodium
-     */
+    pbkdf2_hmac_sha512_progress(passwd, passwdlen, salt, saltlen,
+        buf, dkLen, c, NULL);
+}
+
+void pbkdf2_hmac_sha512_progress(const uint8_t *passwd, size_t passwdlen, 
+        const uint8_t *salt, size_t saltlen,
+        uint8_t *buf, size_t dkLen, uint64_t c, uint8_t *progress){
     CONFIDENTIAL crypto_auth_hmacsha512_state PShctx;
     crypto_auth_hmacsha512_state hctx;
     size_t                       i;
@@ -50,6 +57,11 @@ void pbkdf2_hmac_sha512(const uint8_t *passwd, size_t passwdlen,
             clen = crypto_auth_hmacsha512_BYTES;
         }
         memcpy(&buf[i * crypto_auth_hmacsha512_BYTES], T, clen);
+
+        // Update progress
+        if( NULL != progress ) {
+            *progress = (uint8_t)(100*i / dkLen);
+        }
     }
     sodium_memzero((void *) &PShctx, sizeof PShctx);
     sodium_memzero(U, sizeof(U));
