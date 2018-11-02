@@ -35,8 +35,7 @@ void pbkdf2_hmac_sha512(const uint8_t *passwd, size_t passwdlen,
         crypto_auth_hmacsha512_final(&hctx, U);
 
         memcpy(T, U, sizeof(T));
-        /* LCOV_EXCL_START */
-        for (j = 2; j <= c; j++) {
+        for (j = 1; j < c; j++) {
             crypto_auth_hmacsha512_init(&hctx, passwd, passwdlen);
             crypto_auth_hmacsha512_update(&hctx, U, sizeof(U));
             crypto_auth_hmacsha512_final(&hctx, U);
@@ -45,7 +44,6 @@ void pbkdf2_hmac_sha512(const uint8_t *passwd, size_t passwdlen,
                 T[k] ^= U[k];
             }
         }
-        /* LCOV_EXCL_STOP */
 
         clen = dkLen - i * 64;
         if (clen > crypto_auth_hmacsha512_BYTES) {
