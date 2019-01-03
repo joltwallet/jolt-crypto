@@ -14,6 +14,6 @@ void pbkdf2_hmac_sha512_progress(
         const uint8_t *passwd, size_t passwdlen, 
         const uint8_t *salt, size_t saltlen,
         uint8_t *buf, size_t dkLen,
-        uint64_t c, uint8_t *progress);
+        uint64_t c, int8_t *progress);
 
 #endif

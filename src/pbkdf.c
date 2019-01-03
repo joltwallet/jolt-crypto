@@ -23,7 +23,7 @@ void pbkdf2_hmac_sha512(const uint8_t *passwd, size_t passwdlen,
 
 void pbkdf2_hmac_sha512_progress(const uint8_t *passwd, size_t passwdlen, 
         const uint8_t *salt, size_t saltlen,
-        uint8_t *buf, size_t dkLen, uint64_t c, uint8_t *progress){
+        uint8_t *buf, size_t dkLen, uint64_t c, int8_t *progress){
     CONFIDENTIAL crypto_auth_hmacsha512_state PShctx;
     crypto_auth_hmacsha512_state hctx;
     size_t                       i;
@@ -55,7 +55,7 @@ void pbkdf2_hmac_sha512_progress(const uint8_t *passwd, size_t passwdlen,
             }
             // Update progress
             if( NULL != progress ) {
-                *progress = (uint8_t)(100*((i*c)+j) / n_iterations);
+                *progress = (int8_t)(100*((i*c)+j) / n_iterations);
                 ESP_LOGD(TAG, "Derivation Progress: %d", *progress);
             }
         }
