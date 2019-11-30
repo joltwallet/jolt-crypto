@@ -6,6 +6,9 @@
 #include "jolttypes.h"
 #include "joltcrypto.h"
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 static const char TAG[] = "jc-pbkdf2";
 /*
  * c - number of iterations
@@ -58,6 +61,7 @@ void pbkdf2_hmac_sha512_progress(const uint8_t *passwd, size_t passwdlen,
                 *progress = (int8_t)(100*((i*c)+j) / n_iterations);
                 ESP_LOGD(TAG, "Derivation Progress: %d", *progress);
             }
+            taskYIELD(); // Don't starve the rest of the system
         }
         clen = dkLen - i * 64;
         if (clen > crypto_auth_hmacsha512_BYTES) {
